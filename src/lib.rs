@@ -1,4 +1,9 @@
-use axum::extract::State;
+use axum::{
+    extract::{Request, State},
+    http::StatusCode,
+    middleware::Next,
+    response::Response,
+};
 
 #[derive(Clone)]
 pub struct SharedState<T: SomeThingT + Clone> {
@@ -34,8 +39,17 @@ impl SomeThingT for AnotherStruct {
     }
 }
 
-pub fn middleware_fn<R: SomeThingT + Clone>(State(state): State<SharedState<R>>) {
+pub async fn middleware_fn<T>(
+    State(state): State<&mut T>,
+    req: Request,
+    next: Next,
+) -> Result<Response, StatusCode>
+where
+    T: SharedStateT + Clone + Send + Sync + 'static,
+{
     let val = state.func_two();
 
     val.does_something();
+
+    Ok(next.run(req).await)
 }

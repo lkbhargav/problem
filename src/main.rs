@@ -27,8 +27,8 @@ async fn main() {
         .route(
             "/users",
             post(create_user).route_layer(middleware::from_fn_with_state(
-                state,
-                middleware_fn::<AnotherStruct>,
+                state.clone(),
+                middleware_fn::<SharedState<AnotherStruct>>,
             )),
         )
         .with_state(state);
