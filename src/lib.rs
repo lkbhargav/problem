@@ -40,12 +40,12 @@ impl SomeThingT for AnotherStruct {
 }
 
 pub async fn middleware_fn<T>(
-    State(state): State<&mut T>,
+    State(state): State<T>,
     req: Request,
     next: Next,
 ) -> Result<Response, StatusCode>
 where
-    T: SharedStateT + Clone + Send + Sync + 'static,
+    T: SharedStateT + Clone + Send + Sync,
 {
     let val = state.func_two();
 
