@@ -11,19 +11,19 @@ pub struct SharedState<T: SomeThingT + Clone> {
     pub something: T,
 }
 
-impl<T: SomeThingT + Clone> SharedStateT for SharedState<T> {
+impl<T: SomeThingT + Clone + 'static> SharedStateT for SharedState<T> {
     fn func_one(&self) -> String {
         self.name.clone()
     }
 
-    fn func_two(&self) -> impl SomeThingT + Clone {
+    fn func_two(&self) -> impl SomeThingT + Clone + 'static {
         self.something.clone()
     }
 }
 
 pub trait SharedStateT {
     fn func_one(&self) -> String;
-    fn func_two(&self) -> impl SomeThingT + Clone;
+    fn func_two(&self) -> impl SomeThingT + Clone + 'static;
 }
 
 pub trait SomeThingT {
